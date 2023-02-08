@@ -1,0 +1,28 @@
+import express from "express"
+import cors from "cors"
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+
+import router from "./router/router.js"
+import download from "./router/downloadPdf.js"
+
+
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+
+dotenv.config()
+
+app.use("/download",download)
+
+app.use("/user",router)
+
+app.listen(process.env.PORT,()=>{
+	mongoose.connect(process.env.MONGO_URI,{
+		useNewUrlParser:true, //consoleda çıkacak hataların önüne geçmeyi sağlıyorlar
+		useUnifiedTopology:true //consoleda çıkacak hataların önüne geçmeyi sağlıyorlar
+	})
+	.then(console.log("connected to db"))
+	.catch((err)=> console.log(err))
+})
